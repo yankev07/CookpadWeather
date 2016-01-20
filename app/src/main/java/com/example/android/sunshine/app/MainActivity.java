@@ -48,9 +48,7 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         else if(id == R.id.action_map){
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-            seeLocationOnMap(location);
+            openPreferredLocationInMap();
             return true;
         }
 
@@ -59,9 +57,10 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * Starts an activity to visualize the location on map
-     * @param location The location specified in the Settings page
      */
-    private void seeLocationOnMap(String location) {
+    private void openPreferredLocationInMap() {
+        String location = Utility.getPreferredLocation(this);
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri geoLocation = Uri.parse("geo:0,0").buildUpon().
                 appendQueryParameter("q",location).build();
