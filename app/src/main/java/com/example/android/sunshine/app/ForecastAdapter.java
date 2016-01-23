@@ -59,14 +59,26 @@ public class ForecastAdapter extends CursorAdapter {
     }
 
     /**
-            This is where we fill-in the views with the contents of the cursor.
+        This is where we fill-in the views with the contents of the cursor.
     */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        // Use placeholder image for now
-        viewHolder.iconView.setImageResource(R.drawable.ic_launcher);
+        // Use weather condition ID to set dynamically the weather icon
+        int viewType = getItemViewType(cursor.getPosition());
+        switch(viewType) {
+            case VIEW_TYPE_TODAY: {
+                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
+                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                break;
+            }
+            case VIEW_TYPE_FUTURE_DAY: {
+                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
+                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                break;
+            }
+        }
 
         // Read date from cursor
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
