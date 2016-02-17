@@ -21,6 +21,8 @@ import com.example.android.sunshine.app.data.WeatherContract;
 public class ForecastFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
 
+    private boolean mUseTodayLayout;
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -101,6 +103,7 @@ public class ForecastFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         forecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        forecastAdapter.setUseTodayLayout(mUseTodayLayout);
 
         View rootView = inflater.inflate(R.layout.fragment_forecast, container, false);
 
@@ -165,6 +168,14 @@ public class ForecastFragment extends Fragment
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setUseTodayLayout(boolean useTodayLayout){
+        mUseTodayLayout = useTodayLayout;
+
+        if(forecastAdapter != null){
+            forecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
     }
 
     /**
