@@ -11,10 +11,8 @@ import android.widget.TextView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
 
-/**
- * {@link ForecastAdapter} exposes a list of weather forecasts
- * from a {@link android.database.Cursor} to a {@link android.widget.ListView}.
- */
+
+
 public class ForecastAdapter extends CursorAdapter {
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
@@ -24,9 +22,8 @@ public class ForecastAdapter extends CursorAdapter {
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
     private static final int VIEW_TYPE_COUNT = 2;
-
-    // Flag to determine if we want to use a separate view for "today".
     private boolean mUseTodayLayout = true;
+
 
     public void setUseTodayLayout(boolean useTodayLayout) {
         mUseTodayLayout = useTodayLayout;
@@ -42,19 +39,17 @@ public class ForecastAdapter extends CursorAdapter {
         return VIEW_TYPE_COUNT;
     }
 
-    /**
-     * Copy/paste note: Replace existing newView() method in ForecastAdapter with this one.
-     */
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        // Choose the layout type
+
         int viewType = getItemViewType(cursor.getPosition());
         int layoutId = -1;
 
-        // Determine layoutId from viewType
         if(viewType == VIEW_TYPE_TODAY){
             layoutId = R.layout.list_item_forecast_today;
-        } else if(viewType == VIEW_TYPE_FUTURE_DAY){
+        }
+        else if(viewType == VIEW_TYPE_FUTURE_DAY){
             layoutId = R.layout.list_item_forecast;
         }
 
@@ -65,46 +60,36 @@ public class ForecastAdapter extends CursorAdapter {
         return view;
     }
 
-    /**
-        This is where we fill-in the views with the contents of the cursor.
-    */
+
+
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        // Use weather condition ID to set dynamically the weather icon
         int viewType = getItemViewType(cursor.getPosition());
         switch(viewType) {
             case VIEW_TYPE_TODAY: {
-                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
+                viewHolder.iconView.setImageResource(Utilities.getArtResourceForWeatherCondition(
                         cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {
-                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
+                viewHolder.iconView.setImageResource(Utilities.getIconResourceForWeatherCondition(
                         cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 break;
             }
         }
 
-        // Read date from cursor
-        long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
-        viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMillis));
 
-        // Read weather forecast from cursor
+        long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
+        viewHolder.dateView.setText(Utilities.getFriendlyDayString(context, dateInMillis));
         String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
         viewHolder.descriptionView.setText(description);
-
-        // Read user preference for metric or imperial temperature units
-        boolean isMetric = Utility.isMetric(context);
-
-        // Read high temperature from cursor
+        boolean isMetric = Utilities.isMetric(context);
         double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
-        viewHolder.highTempView.setText(Utility.formatTemperature(context, high, isMetric));
-
-        // Read low temperature from cursor
+        viewHolder.highTempView.setText(Utilities.formatTemperature(context, high, isMetric));
         float low = cursor.getFloat(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        viewHolder.lowTempView.setText(Utility.formatTemperature(context, low,isMetric));
+        viewHolder.lowTempView.setText(Utilities.formatTemperature(context, low,isMetric));
     }
 
     public static class ViewHolder {

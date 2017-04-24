@@ -8,81 +8,72 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity
-    implements ForecastFragment.Callback{
+public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback{
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
-
     private String mLocation;
     private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mLocation = Utility.getPreferredLocation(this);
+        mLocation = Utilities.getPreferredLocation(this);
 
         if (findViewById(R.id.weather_detail_container) != null) {
-            // The detail container view will be present only in the large-screen layouts
-            // (res/layout-sw600dp). If this view is present, then the activity should be
-            // in two-pane mode.
             mTwoPane = true;
 
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a fragment transaction.
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.weather_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
                         .commit();
             }
-        } else {
+        }
+
+        else {
             mTwoPane = false;
             getSupportActionBar().setElevation(0f);
         }
 
-        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager().
-                findFragmentById(R.id.fragment_forecast));
-
+        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, Settings.class));
             return true;
         }
         else if(id == R.id.action_map){
             openPreferredLocationInMap();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Starts an activity to visualize the location on map
-     */
-    private void openPreferredLocationInMap() {
-        String location = Utility.getPreferredLocation(this);
 
+
+    private void openPreferredLocationInMap() {
+
+        String location = Utilities.getPreferredLocation(this);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri geoLocation = Uri.parse("geo:0,0").buildUpon().
-                appendQueryParameter("q",location).build();
+        Uri geoLocation = Uri.parse("geo:0,0").buildUpon().appendQueryParameter("q",location).build();
         intent.setData(geoLocation);
 
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -93,12 +84,14 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+
+
     @Override
     protected void onResume() {
-        super.onResume();
-        String location = Utility.getPreferredLocation( this );
 
-        // update the location in our second pane using the fragment manager
+        super.onResume();
+        String location = Utilities.getPreferredLocation( this );
+
         if (location != null && !location.equals(mLocation)) {
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             if ( null != ff ) {
@@ -106,6 +99,7 @@ public class MainActivity extends ActionBarActivity
             }
 
             DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+
             if ( null != df ) {
                 df.onLocationChanged(location);
             }
@@ -113,14 +107,14 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+
+
     @Override
     public void onItemSelected(Uri dateUri) {
         if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by adding or replacing
-            // the detail fragment using a fragment transaction.
+
             Bundle args = new Bundle();
             args.putParcelable(DetailFragment.DETAIL_URI, dateUri);
-
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(args);
 
@@ -128,10 +122,9 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
 
-        } else {
-            Intent intent = new Intent(this, DetailActivity.class)
-                    .setData(dateUri);
-
+        }
+        else {
+            Intent intent = new Intent(this, DetailActivity.class).setData(dateUri);
             startActivity(intent);
         }
     }

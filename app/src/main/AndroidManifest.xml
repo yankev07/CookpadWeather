@@ -28,7 +28,7 @@
                 android:value="com.example.android.sunshine.app.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Settings"
             android:label="@string/title_activity_settings"
             android:theme="@style/SettingsTheme"
             android:parentActivityName=".MainActivity">
