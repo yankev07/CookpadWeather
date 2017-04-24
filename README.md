@@ -1,6 +1,6 @@
-Sunshine
+CookpadWeather
 ========
 
-Sunshine is the companion Android app for the Udacity course [Developing Android Apps: Android Fundamentals](https://www.udacity.com/course/ud853).
+This is a weather app based on the Sunshine app from the Udacity course ud853
 
-This repo is made in order to follow along the course.
+This repo is made for the Cookpad Inc. programming test
